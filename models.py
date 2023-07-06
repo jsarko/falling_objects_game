@@ -1,4 +1,5 @@
 import pygame
+
 from events import CREATE_NEW_FALLING_OBJECT_EVENT
 
 
@@ -27,9 +28,17 @@ class Player(GameObject):
 
 
 class FallingObject(GameObject):
-    def __init__(self, image, x, y):
-        super().__init__(x, y, image)
+    def __init__(self, x, y, image=""):
+        super().__init__(x, y, self.get_image())
         self.speed = 400
+
+    def get_image(self):
+        from helpers import random_object_image
+        img_path = random_object_image()
+        img = pygame.transform.scale(
+            pygame.image.load(img_path), (50, 50)
+        )
+        return img
 
     def update(self, dt: int) -> None:
         self.rect.y += self.speed * dt

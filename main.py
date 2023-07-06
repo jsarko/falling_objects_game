@@ -33,15 +33,11 @@ player = Player(image=player_image, x=player_start_pos.x, y=player_start_pos.y)
 object_start_pos = pygame.Vector2(
     random.randrange(screen.get_width()), 0
 )
-object_image = pygame.transform.scale(
-    pygame.image.load("assets/frisbee_pixel.png"), (50, 50)
-)
 obj = FallingObject(
-    image=object_image,
     x=object_start_pos.x,
     y=object_start_pos.y
 )
-obj.set_timer(2000)
+obj.set_timer(1000)
 falling_objs.append(obj)
 # Main game loop
 while running:
@@ -53,7 +49,6 @@ while running:
         elif event.type == CREATE_NEW_FALLING_OBJECT_EVENT:
             # Create a new FallingObject
             new_object = FallingObject(
-                image=object_image,
                 x=random.randrange(screen.get_width()),
                 y=object_start_pos.y
             )
