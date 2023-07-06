@@ -31,8 +31,11 @@ class FallingObject(GameObject):
         super().__init__(x, y, image)
         self.speed = 400
 
-    def update(self, dt):
+    def update(self, dt: int) -> None:
         self.rect.y += self.speed * dt
+
+    def is_collision(self, player: Player) -> bool:
+        return self.rect.colliderect(player.rect)
 
     @staticmethod
     def set_timer(ms):

@@ -64,6 +64,8 @@ while running:
         obj.update(dt)
         if is_object_offscreen(obj, screen):
             falling_objs.remove(obj)
+        elif obj.is_collision(player):
+            falling_objs.remove(obj)
         else:
             obj.draw(screen)
 
