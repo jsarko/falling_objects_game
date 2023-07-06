@@ -1,4 +1,7 @@
+import random
+
 import pygame
+
 from models import Player, FallingObject
 from events import CREATE_NEW_FALLING_OBJECT_EVENT
 from helpers import is_object_offscreen
@@ -27,13 +30,18 @@ player = Player(image=player_image, x=player_start_pos.x, y=player_start_pos.y)
 
 
 # Initialize falling objects
-object_start_pos = pygame.Vector2(screen.get_width() / 2, 0)
+object_start_pos = pygame.Vector2(
+    random.randrange(screen.get_width()), 0
+)
 object_image = pygame.transform.scale(
     pygame.image.load("assets/frisbee_pixel.png"), (50, 50)
 )
-obj = FallingObject(image=object_image,
-                    x=object_start_pos.x, y=object_start_pos.y)
-obj.set_timer(5000)
+obj = FallingObject(
+    image=object_image,
+    x=object_start_pos.x,
+    y=object_start_pos.y
+)
+obj.set_timer(2000)
 falling_objs.append(obj)
 # Main game loop
 while running:
@@ -45,7 +53,10 @@ while running:
         elif event.type == CREATE_NEW_FALLING_OBJECT_EVENT:
             # Create a new FallingObject
             new_object = FallingObject(
-                object_image, object_start_pos.x, object_start_pos.y)
+                image=object_image,
+                x=random.randrange(screen.get_width()),
+                y=object_start_pos.y
+            )
             falling_objs.append(new_object)
 
     # fill the screen with a color to wipe away anything from last frame
@@ -59,7 +70,7 @@ while running:
     # screen.blit(player.image, player.rect)
     player.draw(screen)
 
-    # Render Falling objects
+    # Render Falling objects and check for obj events
     for obj in falling_objs:
         obj.update(dt)
         if is_object_offscreen(obj, screen):
