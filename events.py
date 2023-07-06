@@ -1,0 +1,3 @@
+import pygame
+
+CREATE_NEW_FALLING_OBJECT_EVENT = pygame.USEREVENT + 1
