@@ -15,16 +15,16 @@ gravity = True
 dt = 0
 boundary_x = (0, 1280)
 boundary_y = (0, 720)
-PLAYER_SPEED = 500
+PLAYER_SPEED = 700
 
 falling_objs = []
 
 
 # Initialize Player
 player_start_pos = pygame.Vector2(
-    screen.get_width() / 2, screen.get_height() - 150)
+    screen.get_width() / 2, screen.get_height() - 200)
 player_image = pygame.transform.scale(
-    pygame.image.load("assets/pixel_bubz_64.png"), (150, 150)
+    pygame.image.load("assets/pixel_bubz_64.png").convert_alpha(), (120, 120)
 )
 player = Player(image=player_image, x=player_start_pos.x, y=player_start_pos.y)
 
@@ -39,7 +39,15 @@ obj = FallingObject(
 )
 obj.set_timer(1000)
 falling_objs.append(obj)
+
+# Init Assets
+scoreboard = pygame.transform.scale(
+    pygame.image.load("assets/sign.png").convert_alpha(), (100, 100)
+)
+
 # Main game loop
+bg = pygame.transform.scale(pygame.image.load(
+    "assets/bg_jungle.jpg").convert_alpha(), (1280, 720))
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -55,7 +63,8 @@ while running:
             falling_objs.append(new_object)
 
     # fill the screen with a color to wipe away anything from last frame
-    screen.fill("purple")
+    screen.blit(bg, (0, 0))
+    screen.blit(scoreboard, (40, 100))
 
     # RENDER YOUR GAME HERE
 
@@ -94,6 +103,6 @@ while running:
     # limits FPS to 60
     # dt is delta time in seconds since last frame, used for framerate-
     # independent physics.
-    dt = clock.tick(60) / 1000
+    dt = clock.tick(120) / 1000
 
 pygame.quit()

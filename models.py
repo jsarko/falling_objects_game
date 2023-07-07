@@ -30,13 +30,13 @@ class Player(GameObject):
 class FallingObject(GameObject):
     def __init__(self, x, y, image=""):
         super().__init__(x, y, self.get_image())
-        self.speed = 400
+        self.speed = 200
 
     def get_image(self):
         from helpers import random_object_image
         img_path = random_object_image()
         img = pygame.transform.scale(
-            pygame.image.load(img_path), (50, 50)
+            pygame.image.load(img_path).convert_alpha(), (50, 50)
         )
         return img
 
