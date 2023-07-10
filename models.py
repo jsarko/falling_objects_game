@@ -95,3 +95,21 @@ class Button:
         text_surface = self.font.render(self.text, True, self.text_color)
         text_rect = text_surface.get_rect(center=self.rect.center)
         screen.blit(text_surface, text_rect)
+
+
+class ImageButton(Button):
+    def __init__(self, x, y, width, height, image, click_border_color=(255, 0, 0), action=None):
+        super().__init__(x, y, width, height, "", None, None, None, None, None, action)
+        self.image = image
+        self.click_border_color = click_border_color
+
+    def draw(self, screen):
+        if self.clicked:
+            pygame.draw.rect(screen, self.click_border_color, self.rect, 3)
+
+        screen.blit(self.image, self.rect)
+
+    def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.rect.collidepoint(event.pos):
+                self.clicked = not self.clicked

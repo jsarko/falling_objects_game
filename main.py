@@ -2,7 +2,7 @@ import random
 
 import pygame
 
-from models import Player, FallingObject, Button
+from models import Player, FallingObject, Button, ImageButton
 from events import CREATE_NEW_FALLING_OBJECT_EVENT
 from helpers import is_object_offscreen
 
@@ -66,6 +66,15 @@ start_button = Button(
     click_color="darkred",
     action=start_game)
 
+player_button = ImageButton(
+    x=screen.get_width() / 2 - 50,
+    y=screen.get_height() / 2 - 50,
+    width=120,
+    height=120,
+    image=player_image,
+    action=lambda: print("Clicked player")
+)
+
 
 def pregame_loop(screen=screen, font=font):
     screen.fill("white")
@@ -74,8 +83,10 @@ def pregame_loop(screen=screen, font=font):
     screen.blit(chose, (screen.get_width() / 2 -
                 125, screen.get_height() / 2 - 300))
 
-    screen.blit(player.image, (screen.get_width() / 2 - 50,
-                               screen.get_height() / 2 - 50))
+    # screen.blit(player.image, (screen.get_width() / 2 - 50,
+    #                            screen.get_height() / 2 - 50))
+    player_button.draw(screen)
+
     start_button.draw(screen)
 
 
@@ -122,6 +133,7 @@ while running:
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
         start_button.handle_event(event)
+        player_button.handle_event(event)
         if event.type == pygame.QUIT:
             running = False
         elif pregame is False:
