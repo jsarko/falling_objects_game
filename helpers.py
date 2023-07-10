@@ -16,3 +16,9 @@ def is_object_offscreen(obj: FallingObject, screen: pygame.Surface) -> bool:
 def random_object_image() -> str:
     rand_n = random.randrange(len(FALLING_OBJ_IMAGES))
     return FALLING_OBJ_IMAGES[rand_n]
+
+
+def start_game():
+    print("Starting game")
+    global pregame
+    pregame = False

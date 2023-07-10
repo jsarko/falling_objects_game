@@ -22,6 +22,7 @@ class GameObject(pygame.sprite.Sprite):
 class Player(GameObject):
     def __init__(self, image, x, y):
         super().__init__(x, y, image)
+        self.score = 0
 
     def update(self):
         pass
@@ -49,3 +50,48 @@ class FallingObject(GameObject):
     @staticmethod
     def set_timer(ms):
         pygame.time.set_timer(CREATE_NEW_FALLING_OBJECT_EVENT, ms)
+
+
+class Button:
+    def __init__(self, x, y, width, height, text, font, text_color, bg_color, hover_color, click_color, action=None):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.text = text
+        self.font = font
+        self.text_color = text_color
+        self.bg_color = bg_color
+        self.hover_color = hover_color
+        self.click_color = click_color
+        self.action = action
+        self.hovered = False
+        self.clicked = False
+
+    def handle_event(self, event):
+        if event.type == pygame.MOUSEMOTION:
+            if self.rect.collidepoint(event.pos):
+                self.hovered = True
+            else:
+                self.hovered = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if self.rect.collidepoint(event.pos):
+                self.clicked = True
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if self.rect.collidepoint(event.pos) and self.clicked:
+                self.clicked = False
+                if self.action is not None:
+                    self.action()
+
+    def update(self):
+        pass
+
+    def draw(self, screen):
+        if self.clicked:
+            color = self.click_color
+        elif self.hovered:
+            color = self.hover_color
+        else:
+            color = self.bg_color
+
+        pygame.draw.rect(screen, color, self.rect)
+        text_surface = self.font.render(self.text, True, self.text_color)
+        text_rect = text_surface.get_rect(center=self.rect.center)
+        screen.blit(text_surface, text_rect)
