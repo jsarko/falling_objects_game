@@ -124,13 +124,14 @@ while running:
         start_button.handle_event(event)
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == CREATE_NEW_FALLING_OBJECT_EVENT:
-            # Create a new FallingObject
-            new_object = FallingObject(
-                x=random.randrange(screen.get_width()),
-                y=object_start_pos.y
-            )
-            falling_objs.append(new_object)
+        elif pregame is False:
+            if event.type == CREATE_NEW_FALLING_OBJECT_EVENT:
+                # Create a new FallingObject
+                new_object = FallingObject(
+                    x=random.randrange(screen.get_width()),
+                    y=object_start_pos.y
+                )
+                falling_objs.append(new_object)
 
     # fill the screen with a color to wipe away anything from last frame
 
