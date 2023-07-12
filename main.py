@@ -9,6 +9,7 @@ from helpers import is_object_offscreen
 # pygame setup
 pygame.init()
 pregame = True
+postgame = False
 screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 running = True
@@ -18,6 +19,10 @@ boundary_x = (0, 1280)
 boundary_y = (0, 720)
 PLAYER_SPEED = 700
 falling_objs = []
+start_time = 0
+time_limit = 90  # seconds
+global remaining_time
+remaining_time = time_limit
 
 # Init Assets
 scoreboard = pygame.transform.scale(
@@ -28,6 +33,9 @@ bg = pygame.transform.scale(pygame.image.load(
 font = pygame.font.SysFont('Comic Sans MS', 40, pygame.font.Font.bold)
 player_image = pygame.transform.scale(
     pygame.image.load("assets/pixel_bubz_64.png").convert_alpha(), (120, 120)
+)
+countdown = pygame.transform.scale(pygame.image.load(
+    "assets/hanging_sign.png").convert_alpha(), (150, 150)
 )
 
 # Initialize Player
@@ -50,7 +58,18 @@ falling_objs.append(obj)
 
 def start_game():
     global pregame
+    global start_time
     pregame = False
+    start_time = pygame.time.get_ticks()
+
+
+def replay_game():
+    global pregame
+    global postgame
+    global remaining_time
+    remaining_time = time_limit
+    pregame = not pregame
+    postgame = not postgame
 
 
 start_button = Button(
@@ -65,6 +84,19 @@ start_button = Button(
     hover_color="red",
     click_color="darkred",
     action=start_game)
+
+replay_button = Button(
+    x=screen.get_width() / 2 - 100,
+    y=screen.get_height() / 2 + 200,
+    width=300,
+    height=100,
+    text="Play Again",
+    font=font,
+    text_color="black",
+    bg_color="blue",
+    hover_color="red",
+    click_color="darkred",
+    action=replay_game)
 
 player_button = ImageButton(
     x=screen.get_width() / 2 - 50,
@@ -90,9 +122,33 @@ def pregame_loop(screen=screen, font=font):
     start_button.draw(screen)
 
 
+def postgame_loop(screen=screen, font=font):
+    screen.fill("white")
+    final_score = pygame.font.Font.render(
+        font, f"Final Score: {player.score}", True, "black")
+    screen.blit(final_score, (screen.get_width() / 2 -
+                125, screen.get_height() / 2 - 300))
+
+    replay_button.draw(screen)
+
+
 def main_loop(screen=screen, font=font, falling_objs=falling_objs):
+    # TODO: Move blits to GameObject.draw(). Add center bool param to draw() that will center the object
+    # on screen in regards to the objects size. Add optional offset param as well that takes x, y values.
+
+    # TODO: Add method to center a rect within another rect
+
     screen.blit(bg, (0, 0))
     screen.blit(scoreboard, (40, 100))
+    screen.blit(countdown, (screen.get_width() / 2 - 75, -30))
+
+    # TODO: Move to separate function
+    global remaining_time
+    remaining_time = time_limit - \
+        (pygame.time.get_ticks() - start_time) // 1000
+    countdown_text = f"{remaining_time // 60}:{'0' if len(str(remaining_time)) == 1 else ''}{remaining_time % 60}"
+    time = pygame.font.Font.render(font, str(countdown_text), True, "black")
+    screen.blit(time, (screen.get_width() / 2 - 40, 40))
 
     score = pygame.font.Font.render(
         font, str(player.score), True, "black")
@@ -125,7 +181,9 @@ def main_loop(screen=screen, font=font, falling_objs=falling_objs):
 
 
 while running:
-    if pregame:
+    if postgame:
+        postgame_loop()
+    elif pregame:
         pregame_loop()
     else:
         main_loop()
@@ -137,6 +195,8 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif pregame is False:
+            if postgame:
+                replay_button.handle_event(event)
             if event.type == CREATE_NEW_FALLING_OBJECT_EVENT:
                 # Create a new FallingObject
                 new_object = FallingObject(
@@ -145,6 +205,10 @@ while running:
                 )
                 falling_objs.append(new_object)
 
+    if (remaining_time < 0
+        and not pregame
+            and not postgame):
+        postgame = True
     # fill the screen with a color to wipe away anything from last frame
 
     # flip() the display to put your work on screen
