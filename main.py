@@ -20,7 +20,7 @@ boundary_y = (0, 720)
 PLAYER_SPEED = 700
 falling_objs = []
 start_time = 0
-time_limit = 90  # seconds
+time_limit = 20  # seconds
 global remaining_time
 remaining_time = time_limit
 
@@ -37,6 +37,13 @@ player_image = pygame.transform.scale(
 countdown = pygame.transform.scale(pygame.image.load(
     "assets/hanging_sign.png").convert_alpha(), (150, 150)
 )
+
+# Init music
+pregame_music = pygame.mixer.music.load("assets/pregame_music.mp3")
+# main_music = pygame.mixer.usic.load("assets/main_music.mp3")
+
+# current_track = pregame_music
+pygame.mixer.music.play()
 
 # Initialize Player
 player_start_pos = pygame.Vector2(
@@ -61,6 +68,8 @@ def start_game():
     global start_time
     pregame = False
     start_time = pygame.time.get_ticks()
+    pygame.mixer.music.load("assets/main_music.mp3")
+    pygame.mixer.music.play()
 
 
 def replay_game():
@@ -70,6 +79,8 @@ def replay_game():
     remaining_time = time_limit
     pregame = not pregame
     postgame = not postgame
+    pygame.mixer.music.load("assets/pregame_music.mp3")
+    pygame.mixer.music.play()
 
 
 start_button = Button(
@@ -194,7 +205,7 @@ while running:
         player_button.handle_event(event)
         if event.type == pygame.QUIT:
             running = False
-        elif pregame is False:
+        elif pregame is False and postgame is False:
             if postgame:
                 replay_button.handle_event(event)
             if event.type == CREATE_NEW_FALLING_OBJECT_EVENT:
@@ -208,6 +219,8 @@ while running:
     if (remaining_time < 0
         and not pregame
             and not postgame):
+        pygame.mixer.music.load("assets/postgame_music.mp3")
+        pygame.mixer.music.play()
         postgame = True
     # fill the screen with a color to wipe away anything from last frame
 
