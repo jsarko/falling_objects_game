@@ -5,12 +5,15 @@ before time runs out.
 
 ## Objective: collect falling bones and toys and avoid trash, etc
 
-    ## - How many can you grab before time runs out?
-    ## - Possible Penaltys
-        ### - Life system. Three strikes and done.
-        ### - Takes away points from total score
+How many can you grab before time runs out?
 
-## GameEnd: Eating too much bullshit gives an upset tummy
+## Alternate modes?
+
+GameEnd: Eating too much bullshit gives an upset tummy?
+
+- Possible Penaltys
+  - Life system. Three strikes and done.
+  - Takes away points from total score
 
 ## Player abilities
 
